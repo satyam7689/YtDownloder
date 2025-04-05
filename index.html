@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YouTube Playlist Downloader</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+    input {
+      padding: 0.5rem;
+      width: 80%;
+      max-width: 400px;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.6rem 1rem;
+      background-color: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #status {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>YouTube Playlist Downloader</h1>
+  <input type="text" id="playlistUrl" placeholder="Enter YouTube Playlist URL" />
+  <br />
+  <button onclick="downloadPlaylist()">Download Playlist</button>
+  <div id="status"></div>
+
+  <script>
+    async function downloadPlaylist() {
+      const url = document.getElementById('playlistUrl').value;
+      const status = document.getElementById('status');
+
+      if (!url) {
+        status.innerText = 'Please enter a playlist URL';
+        return;
+      }
+
+      status.innerText = 'Sending request...';
+
+      const backendUrl = 'https://your-backend-url.onrender.com/api/download'; // Replace this with your actual backend URL
+
+      try {
+        const response = await fetch(backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ playlistUrl: url })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          status.innerHTML = `Download started! <a href="${data.downloadLink}" target="_blank">Click here if not automatically downloaded</a>`;
+        } else {
+          status.innerText = data.error || 'Failed to process the playlist.';
+        }
+      } catch (error) {
+        status.innerText = 'Error connecting to backend.';
+      }
+    }
+  </script>
+</body>
+</html>
