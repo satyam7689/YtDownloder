@@ -48,9 +48,9 @@
         return;
       }
 
-      status.innerText = 'Sending request...';
+      status.innerText = 'Processing... please wait.';
 
-      const backendUrl = 'https://your-backend-url.onrender.com/api/download'; // Replace this with your actual backend URL
+      const backendUrl = 'https://backedyt.onrender.com/api/download';
 
       try {
         const response = await fetch(backendUrl, {
@@ -60,13 +60,13 @@
         });
 
         const data = await response.json();
-        if (response.ok) {
-          status.innerHTML = `Download started! <a href="${data.downloadLink}" target="_blank">Click here if not automatically downloaded</a>`;
+        if (response.ok && data.downloadLink) {
+          status.innerHTML = `Download ready: <a href="${data.downloadLink}" target="_blank">Click to download</a>`;
         } else {
           status.innerText = data.error || 'Failed to process the playlist.';
         }
       } catch (error) {
-        status.innerText = 'Error connecting to backend.';
+        status.innerText = 'Backend error. Please try again later.';
       }
     }
   </script>
